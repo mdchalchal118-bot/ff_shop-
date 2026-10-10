@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-gaming: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-rajdhani: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #07090e;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-orbitron {
+    font-family: var(--font-gaming);
+  }
+
+  .font-rajdhani {
+    font-family: var(--font-rajdhani);
+  }
+}
+
+/* Custom Cyber Neon and Glassmorphism Styles */
+.cyber-glow-cyan {
+  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.4), 0 0 10px -2px rgba(6, 182, 212, 0.3);
+}
+
+.cyber-glow-blue {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.4), 0 0 10px -2px rgba(59, 130, 246, 0.3);
+}
+
+.cyber-glow-purple {
+  box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.4), 0 0 10px -2px rgba(168, 85, 247, 0.3);
+}
+
+.cyber-glass {
+  background: rgba(13, 18, 30, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.cyber-glass-card {
+  background: linear-gradient(135deg, rgba(16, 24, 40, 0.8) 0%, rgba(10, 15, 26, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cyber-glass-card:hover {
+  border-color: rgba(34, 211, 238, 0.55);
+  box-shadow: 0 8px 32px -4px rgba(6, 182, 212, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+.water-glass-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(20, 30, 55, 0.7) 0%, rgba(10, 16, 30, 0.85) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.water-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    rgba(34, 211, 238, 0.15),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: 0.6s ease;
+  pointer-events: none;
+}
+
+.water-glass-card:hover::before {
+  left: 100%;
+}
+
+.water-glass-card.selected {
+  border-color: #06b6d4;
+  background: linear-gradient(145deg, rgba(14, 116, 144, 0.35) 0%, rgba(8, 47, 73, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090c14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
