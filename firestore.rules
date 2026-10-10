@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'mdchalchal118@gmail.com' && request.auth.token.email_verified == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Products: Public read, Admin write
+    match /products/{productId} {
+      allow read: if isValidId(productId);
+      allow create, update, delete: if isAdmin() && isValidId(productId);
+
+      match /packages/{packageId} {
+        allow read: if isValidId(productId) && isValidId(packageId);
+        allow create, update, delete: if isAdmin() && isValidId(productId) && isValidId(packageId);
+      }
+    }
+
+    // Settings: Public read, Admin write
+    match /settings/{settingId} {
+      allow read: if isValidId(settingId);
+      allow create, update, delete: if isAdmin() && isValidId(settingId);
+    }
+
+    // Notices: Public read, Admin write
+    match /notices/{noticeId} {
+      allow read: if isValidId(noticeId);
+      allow create, update, delete: if isAdmin() && isValidId(noticeId);
+    }
+
+    // Banners: Public read, Admin write
+    match /banners/{bannerId} {
+      allow read: if isValidId(bannerId);
+      allow create, update, delete: if isAdmin() && isValidId(bannerId);
+    }
+
+    // Orders: Anyone can submit a new order. Admin can list, read, update status, and manage.
+    match /orders/{orderId} {
+      allow get: if isValidId(orderId) && (isAdmin() || (isSignedIn() && existing().userId == request.auth.uid));
+      allow list: if isAdmin();
+      
+      allow create: if isValidId(orderId) &&
+        incoming().orderRef is string && incoming().orderRef.size() <= 32 &&
+        incoming().orderType in ['guild_glory', 'diamond_topup'] &&
+        incoming().packageName is string && incoming().packageName.size() <= 100 &&
+        incoming().price is number && incoming().price > 0 &&
+        incoming().bkashTransactionId is string && incoming().bkashTransactionId.size() <= 64 &&
+        incoming().senderPhone is string && incoming().senderPhone.size() <= 32 &&
+        incoming().targetId is string && incoming().targetId.size() <= 64 &&
+        incoming().paymentStatus in ['pending', 'verified', 'rejected'] &&
+        incoming().serviceStatus in ['processing', 'completed', 'cancelled'];
+
+      allow update, delete: if isAdmin() && isValidId(orderId);
+    }
+
+    // Admins registry
+    match /admins/{userId} {
+      allow read, write: if isAdmin() && isValidId(userId);
+    }
+  }
+}
